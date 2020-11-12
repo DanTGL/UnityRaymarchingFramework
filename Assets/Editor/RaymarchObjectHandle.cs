@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class RaymarchEditorWindow : Editor {
+public class RaymarchObjectHandle : Editor {
 
     private int controlIdHash = "RaymarchEditorWindow".GetHashCode();
 
+    RaymarchingObject Raymarch(Ray ray) {
+    }
+
     void OnSceneGUI() {
         int controlId = EditorGUIUtility.GetControlID(controlIdHash, FocusType.Keyboard);
-
         Event e = Event.current;
         switch (e.type) {
             case EventType.MouseDown:
@@ -32,9 +34,9 @@ public class RaymarchEditorWindow : Editor {
             case EventType.Repaint:
                 break;
             case EventType.Layout:
-                Matrix4x4 matrix = Handles.matrix.SetTRS(HandleUtility.CalcLineTranslation();
+                /*Matrix4x4 matrix = Handles.matrix.SetTRS(HandleUtility.CalcLineTranslation();
 
-                Vector3 pointWorldPos = matrix.MultiplyPoint3x4(position)
+                Vector3 pointWorldPos = matrix.MultiplyPoint3x4(position)*/
 
                 break;
         }
