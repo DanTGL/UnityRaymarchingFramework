@@ -36,4 +36,8 @@ public class RaymarchShape : MonoBehaviour {
         return Vector3.Scale(size, transform.localScale);
     }
 
+    public Vector3 GetRotation() {
+        return transform.rotation.eulerAngles * Mathf.Deg2Rad;
+    }
+
 }

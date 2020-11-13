@@ -18,6 +18,7 @@ struct Object {
     int shape;
     float3 worldPos;
     float3 size;
+    float3 rotation;
     float4 surfaceColor;
 };
 
@@ -50,22 +51,24 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(origin, direction);
 }
 
+#include "./Transform.cginc"
 #include "./DistanceFunctions.cginc"
 
 float4 raymarch(Ray ray) {
+    float3 rayPos = ray.origin;
     for (int step = 0; step < MAX_STEPS; step++) {
         float dist = MAX_DIST;
 
         for (int i = 0; i < _numShapes; i++) {
             Object obj = dataBuffer[i];
-            dist = min(SDFScene(ray.origin, obj), dist);
+            dist = min(SDFScene(Transform(rayPos, obj.rotation), obj), dist);
 
             if (dist < EPSILON) {
                 return obj.surfaceColor;
             }
         }
 
-        ray.origin += dist * ray.direction;
+        rayPos += dist * ray.direction;
     }
 
     return float4(0.0f, 0.0f, 0.0f, 1.0f);

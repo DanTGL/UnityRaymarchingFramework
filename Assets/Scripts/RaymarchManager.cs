@@ -16,6 +16,7 @@ public class RaymarchManager : MonoBehaviour {
         public int shape;
         public Vector3 position;
         public Vector3 size;
+        public Vector3 rotation;
         public Color surfaceColor;
     }
 
@@ -38,6 +39,7 @@ public class RaymarchManager : MonoBehaviour {
             obj.shape = foundObjs[i].GetShape();
             obj.position = foundObjs[i].GetPosition();
             obj.size = foundObjs[i].GetSize();
+            obj.rotation = foundObjs[i].GetRotation();
             obj.surfaceColor = foundObjs[i].GetSurfaceColor();
             objects.Add(obj);
         }
@@ -56,7 +58,7 @@ public class RaymarchManager : MonoBehaviour {
 
         FindObjects();
 
-        ComputeBuffer buffer = new ComputeBuffer(objects.Count, 44);
+        ComputeBuffer buffer = new ComputeBuffer(objects.Count, 56);
         buffer.SetData(objects.ToArray());
 
         computeShader.SetMatrix("_CameraToWorld", cam.cameraToWorldMatrix);
