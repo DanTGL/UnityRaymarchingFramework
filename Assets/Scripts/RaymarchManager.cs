@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
-public class RaymarchingManager : MonoBehaviour {
+public class RaymarchManager : MonoBehaviour {
 
     public ComputeShader computeShader;
 
@@ -12,15 +12,14 @@ public class RaymarchingManager : MonoBehaviour {
 
     private int raymarchKernel;
 
-    struct RaymarchObject {
+    struct ObjectData {
         public int shape;
-        public float radius;
         public Vector3 position;
-        public Vector3 scale;
+        public Vector3 size;
         public Color surfaceColor;
     }
 
-    private List<RaymarchObject> objects;
+    private List<ObjectData> objects;
 
     void Start() {
         cam = GetComponent<Camera>();
@@ -32,14 +31,13 @@ public class RaymarchingManager : MonoBehaviour {
     }
 
     void FindObjects() {
-        objects = new List<RaymarchObject>();
-        RaymarchingObject[] foundObjs = FindObjectsOfType<RaymarchingObject>();
+        objects = new List<ObjectData>();
+        RaymarchShape[] foundObjs = FindObjectsOfType<RaymarchShape>();
         for (int i = 0; i < foundObjs.Length; i++) {
-            RaymarchObject obj;
+            ObjectData obj;
             obj.shape = foundObjs[i].GetShape();
-            obj.radius = foundObjs[i].GetRadius();
             obj.position = foundObjs[i].GetPosition();
-            obj.scale = foundObjs[i].GetScale();
+            obj.size = foundObjs[i].GetSize();
             obj.surfaceColor = foundObjs[i].GetSurfaceColor();
             objects.Add(obj);
         }
@@ -58,7 +56,7 @@ public class RaymarchingManager : MonoBehaviour {
 
         FindObjects();
 
-        ComputeBuffer buffer = new ComputeBuffer(objects.Count, 48);
+        ComputeBuffer buffer = new ComputeBuffer(objects.Count, 44);
         buffer.SetData(objects.ToArray());
 
         computeShader.SetMatrix("_CameraToWorld", cam.cameraToWorldMatrix);

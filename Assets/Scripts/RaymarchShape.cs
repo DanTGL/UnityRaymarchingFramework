@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaymarchingObject : MonoBehaviour {
+public class RaymarchShape : MonoBehaviour {
 
     enum ShapeType {
         NONE,
         SPHERE,
-        CUBE
+        CUBE,
+        CYLINDER
     }
 
     [SerializeField]
     private ShapeType shape = ShapeType.NONE;
 
     [SerializeField]
-    private float radius = 1f;
+    private Vector3 size = Vector3.one;
 
     [SerializeField]
     private Color surfaceColor = Color.white;
@@ -27,16 +28,12 @@ public class RaymarchingObject : MonoBehaviour {
         return (int) shape;
     }
 
-    public float GetRadius() {
-        return radius;
-    }
-
     public Color GetSurfaceColor() {
         return surfaceColor;
     }
 
-    public Vector3 GetScale() {
-        return transform.localScale;
+    public Vector3 GetSize() {
+        return Vector3.Scale(size, transform.localScale);
     }
 
 }

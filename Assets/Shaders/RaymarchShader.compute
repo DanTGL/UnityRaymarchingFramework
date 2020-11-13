@@ -9,11 +9,15 @@ float4x4 _CameraInverseProjection;
 int _numShapes;
 static const float PI = 3.14159265f;
 
+#define NONE 0
+#define SPHERE 1
+#define CUBE 2
+#define CYLINDER 3
+
 struct Object {
     int shape;
-    float radius;
     float3 worldPos;
-    float3 scale;
+    float3 size;
     float4 surfaceColor;
 };
 
@@ -46,13 +50,7 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(origin, direction);
 }
 
-float SDFSphere(float3 center, float3 p, float radius) {
-    return length(center - p) - radius;
-}
-
-float SDF(float3 p, Object obj) {
-    return SDFSphere(obj.worldPos, p, obj.radius);
-}
+#include "./DistanceFunctions.cginc"
 
 float4 raymarch(Ray ray) {
     for (int step = 0; step < MAX_STEPS; step++) {
@@ -60,7 +58,7 @@ float4 raymarch(Ray ray) {
 
         for (int i = 0; i < _numShapes; i++) {
             Object obj = dataBuffer[i];
-            dist = min(SDF(ray.origin, obj), dist);
+            dist = min(SDFScene(ray.origin, obj), dist);
 
             if (dist < EPSILON) {
                 return obj.surfaceColor;
