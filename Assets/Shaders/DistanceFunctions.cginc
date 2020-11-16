@@ -27,16 +27,3 @@ float SDFCylinder(float3 worldPos, float3 rayPos, float height, float radius) {
     float2 d = abs(float2(length(worldPos.xz - rayPos.xz), worldPos.y - rayPos.y)) - float2(height, radius);
     return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
 }
-
-float SDFScene(float3 rayPos, Object obj) {
-    switch(obj.shape) {
-        case SPHERE:
-            return SDFSphere(obj.worldPos, rayPos, obj.size.x);
-        case CUBE:
-            return SDFCuboid(obj.worldPos, rayPos, obj.size);
-        case CYLINDER:
-            return SDFCylinder(obj.worldPos, rayPos, obj.size.y, obj.size.x);
-        default:
-            return MAX_DIST;
-    }
-}

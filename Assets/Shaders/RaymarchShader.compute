@@ -54,6 +54,19 @@ Ray CreateCameraRay(float2 uv) {
 #include "./Transform.cginc"
 #include "./DistanceFunctions.cginc"
 
+float SDFScene(inout float3 rayPos, Object obj) {
+    switch(obj.shape) {
+        case SPHERE:
+            return SDFSphere(obj.worldPos, rayPos, obj.size.x);
+        case CUBE:
+            return SDFCuboid(obj.worldPos, rayPos, obj.size);
+        case CYLINDER:
+            return SDFCylinder(obj.worldPos, rayPos, obj.size.y, obj.size.x);
+        default:
+            return MAX_DIST;
+    }
+}
+
 float4 raymarch(Ray ray) {
     float3 rayPos = ray.origin;
     for (int step = 0; step < MAX_STEPS; step++) {
@@ -61,7 +74,7 @@ float4 raymarch(Ray ray) {
 
         for (int i = 0; i < _numShapes; i++) {
             Object obj = dataBuffer[i];
-            dist = min(SDFScene(Transform(rayPos, obj.rotation), obj), dist);
+            dist = min(SDFScene(rayPos, obj), dist);
 
             if (dist < EPSILON) {
                 return obj.surfaceColor;
@@ -71,7 +84,7 @@ float4 raymarch(Ray ray) {
         rayPos += dist * ray.direction;
     }
 
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    return float4(ray.direction * 0.75f, 1.0f);
 }
 
 [numthreads(8,8,1)]

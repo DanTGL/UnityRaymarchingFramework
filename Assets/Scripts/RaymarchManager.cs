@@ -3,7 +3,7 @@ using UnityEngine;
 
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class RaymarchManager : MonoBehaviour {
-
+    
     public ComputeShader computeShader;
 
     private RenderTexture target;
